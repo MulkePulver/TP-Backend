@@ -36,4 +36,22 @@ public class VideoServiceImpl implements VideoService {
     public View save(View view) {
         return viewsRepository.save(view);
     }
+
+    @Override
+    public List<Video> findByTitle(String title) throws VideoNotFoundException {
+        List<Video> videos = videoRepository.find(title);
+        if (videos.isEmpty()) {
+            throw new VideoNotFoundException("No videos found with title: " + title);
+        }
+        return videos;
+    }
+
+    @Override
+    public List<Video> findByDuration(double minDuration, double maxDuration) throws VideoNotFoundException {
+        List<Video> videos = videoRepository.find(minDuration, maxDuration);
+        if (videos.isEmpty()) {
+            throw new VideoNotFoundException("No videos found in duration range: " + minDuration + " - " + maxDuration);
+        }
+        return videos;
+    }
 }
