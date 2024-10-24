@@ -50,4 +50,31 @@ class VideoServiceImplTest {
         when(videoRepository.findAll()).thenReturn(Collections.emptyList());
         assertThrows(VideoNotFoundException.class, () -> videoService.findAll());
     }
+    @Test
+    void when_FindByTitle_does_not_find_any_video_an_VideoNotFoundException_should_be_thrown() {
+        when(videoRepository.find("Nonexistent Title")).thenReturn(Collections.emptyList());
+        assertThrows(VideoNotFoundException.class, () -> videoService.findByTitle("Nonexistent Title"));
+    }
+
+    @Test
+    void when_FindByTitle_finds_videos_they_should_be_returned() throws VideoNotFoundException {
+        List<Video> videos = List.of(new Video("01", "Title", "Description", 4.5));
+        when(videoRepository.find("Title")).thenReturn(videos);
+        List<Video> result = videoService.findByTitle("Title");
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void when_FindByDuration_does_not_find_any_video_an_VideoNotFoundException_should_be_thrown() {
+        when(videoRepository.find(1.0, 2.0)).thenReturn(Collections.emptyList());
+        assertThrows(VideoNotFoundException.class, () -> videoService.findByDuration(1.0, 2.0));
+    }
+
+    @Test
+    void when_FindByDuration_finds_videos_they_should_be_returned() throws VideoNotFoundException {
+        List<Video> videos = List.of(new Video("01", "Title", "Description", 4.5));
+        when(videoRepository.find(4.0, 5.0)).thenReturn(videos);
+        List<Video> result = videoService.findByDuration(4.0, 5.0);
+        assertEquals(1, result.size());
+    }
 }
