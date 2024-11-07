@@ -1,29 +1,61 @@
 package culturemedia.service.impl;
-
 import culturemedia.model.Video;
 import culturemedia.model.View;
-import culturemedia.repository.impl.VideoRepositoryImpl;
-import culturemedia.repository.impl.ViewsRepositoryImpl;
+import culturemedia.repository.VideoRepository;
+import culturemedia.repository.ViewsRepository;
 import culturemedia.service.CulturemediaService;
+import culturemedia.exception.VideoNotFoundException;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 public class CultureMediaServiceImpl implements CulturemediaService {
-    public CultureMediaServiceImpl(VideoRepositoryImpl videoRepository, ViewsRepositoryImpl viewsRepository) {
+    private VideoRepository videoRepository;
+    private ViewsRepository viewsRepository;
+
+    public CultureMediaServiceImpl(VideoRepository videoRepository, Object o) {
+        this.videoRepository = videoRepository;
+        this.viewsRepository = viewsRepository;
     }
 
-    @Override
-    public List<Video> findAll() {
-        return List.of();
+
+    public List <Video> find(String title) throws VideoNotFoundException {
+        var video =videoRepository.find(title);
+        try {
+            if (video.isEmpty()) {
+                throw new VideoNotFoundException();
+            }
+            return video;
+        }catch(Exception e){
+            throw new VideoNotFoundException(MessageFormat.format("video not found with the tittle: {0}, Error: {1} " + title,e));
+        }
     }
 
-    @Override
-    public Video save(Video video) {
-        return null;
+    public List <Video> find(Double fromDuration, Double toDuration)throws VideoNotFoundException {
+        var video = videoRepository.find(fromDuration, toDuration);
+        try {
+            if (video.isEmpty()) {
+                throw new VideoNotFoundException();
+            }
+            return video;
+        }catch(Exception e) {
+            throw new VideoNotFoundException();
+        }
+    }
+    public List<Video> findAll() throws VideoNotFoundException {
+        var videos = videoRepository.findAll();
+        if (videos.isEmpty()) {
+            throw new VideoNotFoundException("No videos found.");
+        }
+        return videos;
     }
 
-    @Override
-    public View save(View view) {
-        return null;
+    public Video save(Video video)  {
+        return videoRepository.save(video);
     }
+
+    public View save(View view)  {
+        return viewsRepository.save(view);
+    }
+
 }
