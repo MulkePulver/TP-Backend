@@ -2,9 +2,8 @@ package culturemedia.repository;
 
 import java.util.List;
 
-import culturemedia.repository.VideoRepository;
 import culturemedia.repository.impl.ViewsRepositoryImpl;
-import culturemedia.service.CultureMediaImpl;
+import culturemedia.service.impl.CultureMediaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +18,7 @@ class VideoRepositoryTest {
 
     @BeforeEach
 	void init(){
-        CultureMediaImpl cultureMedia = new CultureMediaImpl(new VideoRepositoryImpl(), new ViewsRepositoryImpl());
+        CultureMediaServiceImpl cultureMedia = new CultureMediaServiceImpl(new VideoRepositoryImpl(), new ViewsRepositoryImpl());
 
 		videoRepository = new VideoRepositoryImpl();
 
